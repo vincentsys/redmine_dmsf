@@ -1,6 +1,84 @@
 Changelog for Redmine DMSF
 ==========================
 
+1.5.8 *2016-10-21*
+------------------
+
+    Drag&Drop for a new content in the new revision form
+    Tree view optimization for speed
+    Wiki macros revision: dmsfd X dmsfdesc
+    Support for deleting users
+        
+* Bug: #578 - A wrong title when uploading documents type: bug
+* Bug: #574 - Macro {{dmsfd(xx)}} produce blank value type: bug
+* Bug: #566 - HTML tags in the document description breaks UI type: bug 
+* Bug: #565 - Error 500 when a link to another folder is in the folder/project type: bug
+* New: #562 - New step button text type: enhancement
+* Bug: #561 - Wrong path in the document's details form type: bug
+* Bug: #560 - Trying to send mail without recipient results in error 500 type: bug
+* Bug: #558 - Deletion of a user type: bug
+* New: #443 - Drag/drop feature for new content type: enhancement
+
+1.5.7 *2016-08-12*
+------------------
+    
+    SQLite compatibility
+    Lock/Unlock feature for global approval workflows
+    Document ID in the document's details
+    New wiki macros (thumbnail, approval workflow)
+    Searchable pick lists
+    Tree view as an user's option
+    Italian localisation
+
+* Bug: #556 - Plugin settings "File default notifications" does not apply!
+* Bug: #554 - JQeury datatable not load correct language file
+* Bug: #545 - Wrong tool-tip for dmsf macro
+* Bug: #544 - Approval workflow email notifications
+* Bug: #542 - Link from commbo box sorting
+* Bug: #538 - Migration error with Redmine 3.3
+* New: #532 - Modified timestamps lost after migration
+* Bug: #531 - webdav: Error -36 on OSX
+* Bug: #530 - Cannot download folders with sub folders
+* New: #529 - Show document description in mouseover or column
+* New: #527 - Add MD5 of each revision in the detail view of documents
+* Bug: #526 - The same version feature doen't work as expected
+* Bug: #523 - Bug with "delegate approval step"
+* Bug: #522 - File Storage Directory does not change
+* New: #520 - Document link after a search ...
+* New: #518 - Debian installation issues
+* Bug: #506 - Document title format %t doesn't reffer to the title
+* Bug: #504 - Non-fatal MySQL error when migrating documents
+* New: #503 - Information about migrating documents
+* Bug: #501 - If a folder or file is locked, we can't activate or deactivate notifications
+* New: #500 - Automatically check the inline radiobutton when use custom version
+* New: #252 - nautilus-like folders-files list view
+
+
+1.5.6 *2016-01-25*
+------------------
+
+    Uploading of large files (>2GB)
+    Support for *.svg and *.py in wiki macros
+    File name formatting while downloading
+
+* Bug: #498 - Webdav: Invalid handling of files with '[' or ']' in file name
+* New: #497 - file.image ignore SVG type
+* Bug: #494 - Unable to upload files with ruby > ruby-2.0.0-p598
+* Bug: #491 - Still using original uploaded filename after filename renamed (PDF file)
+* Bug: #488 - Available projects for 'link to' operation
+* Bug: #487 - Not able to view the url link file, but able to Download
+* Bug: #480 - Big files ( > 500mb) uploading problems
+* Bug: #471 - Converting Documents to DMSF is not working
+* Bug: #470 - sort function
+* Bug: #469 - dmsfd doesn't reuse Wiki syntax in Wiki page
+* New: #468 - Display contents of text file in Wiki page
+* Bug: #465 - Install using debian 8 (jessie)
+* Bug: #459 - WebDav Windows
+* Bug: #458 - Cannot upload big files
+* New  #44  - Append File Revision on filename when downloading file
+
+    Maintenance release II.
+
 1.5.5 *2015-10-19*
 ------------------
 

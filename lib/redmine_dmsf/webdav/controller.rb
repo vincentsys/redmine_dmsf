@@ -3,7 +3,7 @@
 # Redmine plugin for Document Management System "Features"
 #
 # Copyright (C) 2012    Daniel Munn  <dan.munn@munnster.co.uk>
-# Copyright (C) 2011-15 Karel Pičman <karel.picman@kontron.com>
+# Copyright (C) 2011-16 Karel Pičman <karel.picman@kontron.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,9 +31,7 @@ module RedmineDmsf
         unless(resource.exist?)
           NotFound
         else
-          # Win7 hack start
-          #unless(request_document.xpath("//#{ns}propfind/#{ns}allprop").empty?)
-          #  properties = resource.properties
+          # Win7 hack start          
           if request_document.xpath("//#{ns}propfind").empty? || request_document.xpath("//#{ns}propfind/#{ns}allprop").present?
             properties = resource.properties.map { |prop| DAV4Rack::DAVElement.new(prop.merge(:namespace => DAV4Rack::DAVElement.new(:href => prop[:ns_href]))) }
           # Win7 hack end
@@ -62,14 +60,14 @@ module RedmineDmsf
             find_resources.each do |resource|
               xml.response do
                 unless(resource.propstat_relative_path)
-                  xml.href "#{scheme}://#{host}:#{port}#{url_format(resource)}"
+                  xml.href "#{scheme}://#{host}:#{port}#{url_format(resource)}"                  
                 else
                   xml.href url_format(resource)
                 end
                 propstats(xml, get_properties(resource, properties.empty? ? resource.properties : properties))
               end
             end
-          end
+          end          
         end
       end
     
@@ -83,7 +81,7 @@ module RedmineDmsf
           NotFound
         else
           resource.lock_check if resource.supports_locking? && !args.include?(:copy)
-          destination = url_unescape(env['HTTP_DESTINATION'].sub(%r{https?://([^/]+)}, ''))          
+          destination = url_unescape(env['HTTP_DESTINATION'].sub(%r{https?://([^/]+)}, ''))
           host = $1.gsub(/:\d{2,5}$/, '') if $1
           host = host.gsub(/^.+@/, '') if host
           if(host != request.host)
@@ -115,6 +113,19 @@ module RedmineDmsf
           end
           true          
         end
+      end
+
+      # Escape URL string
+      def url_format(resource)
+        # Additionally escape square brackets, otherwise files with
+        # file names like file[1].pdf are not visible in some WebDAV clients
+        # TODO: The method is obsolete
+        URI.encode(super, '[]')
+      end
+
+      def url_unescape(str)
+        # TODO: The method is obsolete
+        super str
       end
       
     end

@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2011    Vít Jonáš <vit.jonas@gmail.com>
 # Copyright (C) 2012    Daniel Munn  <dan.munn@munnster.co.uk>
-# Copyright (C) 2011-15 Karel Pičman <karel.picman@kontorn.com>
+# Copyright (C) 2011-16 Karel Pičman <karel.picman@kontorn.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -29,10 +29,9 @@ class DmsfLock < ActiveRecord::Base
   belongs_to :user
 
   # At the moment apparently we're only supporting a write lock?
-
   as_enum :lock_type, [:type_write, :type_other]
   as_enum :lock_scope, [:scope_exclusive, :scope_shared]
-  
+
   # We really loosely bind the value in the belongs_to above
   # here we just ensure the data internal to the model is correct
   # to ensure everything lists fine - it's the same as a join
@@ -73,5 +72,5 @@ class DmsfLock < ActiveRecord::Base
   def self.find_by_param(*args)
     self.find(*args)
   end
-  
+
 end

@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2011    Vít Jonáš <vit.jonas@gmail.com>
 # Copyright (C) 2012    Daniel Munn <dan.munn@munnster.co.uk>
-# Copyright (C) 2011-15 Karel Pičman <karel.picman@kontron.com>
+# Copyright (C) 2011-16 Karel Pičman <karel.picman@kontron.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -38,17 +38,17 @@ module RedmineDmsf
         end
       end
       if tree
-        ret = ret | (folder.locks.empty? ? folder.lock : folder.locks) unless folder.nil?
+        ret = ret | (self.dmsf_folder.locks.empty? ? self.dmsf_folder.lock : self.dmsf_folder.locks) if dmsf_folder
       end
       return ret
     end
 
-    def lock! scope = :scope_exclusive, type = :type_write, expire = nil
+    def lock!(scope = :scope_exclusive, type = :type_write, expire = nil)
       # Raise a lock error if entity is locked, but its not at resource level
-      existing = locks(false)
+      existing = lock(false)
       raise DmsfLockError.new(l(:error_resource_or_parent_locked)) if self.locked? && existing.empty?
       unless existing.empty?
-        if existing[0].lock_scope == :scope_shared && scope == :scope_shared
+        if (existing[0].lock_scope == :scope_shared) && (scope == :scope_shared)
           # RFC states if an item is exclusively locked and another lock is attempted we reject
           # if the item is shared locked however, we can always add another lock to it
           if self.folder.locked?
@@ -79,7 +79,7 @@ module RedmineDmsf
       return false unless self.locked?
       existing = self.lock(true)
       # If its empty its a folder that's locked (not root)
-      (existing.empty? || (!self.folder.nil? && self.folder.locked?)) ? false : true      
+      (existing.empty? || (!self.dmsf_folder.nil? && self.dmsf_folder.locked?)) ? false : true
     end
 
     #
@@ -87,9 +87,8 @@ module RedmineDmsf
     def locked_for_user?
       return false unless locked?
       b_shared = nil
-      heirarchy = self.dmsf_path
-      heirarchy.each do |folder|
-        locks = folder.locks || folder.lock(false)
+      self.dmsf_path.each do |entity|
+        locks = entity.locks || entity.lock(false)
         next if locks.empty?
         locks.each do |lock|
           next if lock.expired? # In case we're in between updates
@@ -104,11 +103,11 @@ module RedmineDmsf
       end
       false
     end
-        
+
     def unlock!(force_file_unlock_allowed = false)
       raise DmsfLockError.new(l(:warning_file_not_locked)) unless self.locked?
       existing = self.lock(true)
-      if existing.empty? || (!self.folder.nil? && self.folder.locked?) #If its empty its a folder thats locked (not root)
+      if existing.empty? || (!self.dmsf_folder.nil? && self.dmsf_folder.locked?) #If its empty its a folder thats locked (not root)
         raise DmsfLockError.new(l(:error_unlock_parent_locked))
       else
         # If entity is locked to you, you aren't the lock originator (or named in a shared lock) so deny action

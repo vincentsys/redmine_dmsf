@@ -1,6 +1,8 @@
+# encoding: utf-8
+#
 # Redmine plugin for Document Management System "Features"
 #
-# Copyright (C) 2011   Vít Jonáš <vit.jonas@gmail.com>
+# Copyright (C) 2011-16 Karel Pičman <karel.picman@kontron.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,6 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-class DmsfAccessError < StandardError
-   
+class ApprovalWorkflowStatus < ActiveRecord::Migration
+  def self.up
+    add_column :dmsf_workflows, :status, :integer, :null => false, :default => DmsfWorkflow::STATUS_ACTIVE
+    DmsfWorkflow.all.each {|wf| wf.update_attribute(:status, DmsfWorkflow::STATUS_ACTIVE)}
+  end
+
+  def self.down
+    remove_column :dmsf_workflows, :status        
+  end
 end
